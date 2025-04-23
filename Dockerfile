@@ -1,16 +1,21 @@
-# Use a lightweight JDK image for running the application
-FROM openjdk:17-jdk-slim
+# For Java 8, try this
+# FROM openjdk:8-jdk-alpine
 
-# Set working directory
-WORKDIR /app
+# For Java 11, try this
+FROM adoptopenjdk/openjdk11:alpine-jre
 
-# Copy the project files
-COPY target/usermgmt-0.0.1-SNAPSHOT.jar myapp.jar
+# Refer to Maven build -> finalName
+ARG JAR_FILE=target/spring-boot-web.jar
 
+# cd /opt/app
+WORKDIR /opt/app
 
-# Expose the application port
-EXPOSE 8080
+# cp target/spring-boot-web.jar /opt/app/app.jar
+COPY ${JAR_FILE} spring-boot-web.jar
 
-# Run the application
-CMD ["java", "-jar", "myapp.jar"]
+# java -jar /opt/app/app.jar
+ENTRYPOINT ["java","-jar","spring-boot-web.jar"]
 
+## sudo docker run -p 8080:8080 -t docker-spring-boot:1.0
+## sudo docker run -p 80:8080 -t docker-spring-boot:1.0
+## sudo docker run -p 443:8443 -t docker-spring-boot:1.0
